@@ -10,7 +10,7 @@ const create = async (req, res, next) => {
   try {
     const question = await createQuestionService({ text, type, answers, correctAnswer })
 
-    return res.status(STATUS_CODES.created).json({ questionId: question?.id })
+    return res.status(STATUS_CODES.created).json({ questionId: question.id })
   } catch (err) {
     next(err)
   }

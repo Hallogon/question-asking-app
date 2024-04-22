@@ -7,6 +7,9 @@ const QUESTION_TYPES = require('../../../constants/questionTypes')
 // Helpers
 const { NotFound, BadRequest } = require('../../../helpers/httpErrors')
 
+// Handlers
+const handlers = require('./voteHandlers')
+
 const vote = async (id, answer) => {
   const question = await Question.findById(id)
 
@@ -14,33 +17,25 @@ const vote = async (id, answer) => {
     throw new NotFound('Question not found')
   }
 
-  const questionType = question.type
-  const questionAnswers = question.answers
-  const questionCorrectAnswer = question.correctAnswer
+  const { answers, correctAnswer, type, votes } = question
 
-  if (!questionAnswers.includes(answer)) {
-    throw new BadRequest('Question not found')
+  if (!answers.includes(answer)) {
+    throw new BadRequest('Invalid answer')
   }
-  
-  const votes = question.votes
+
+  if (!Object.values(QUESTION_TYPES).includes(type)) {
+    throw new BadRequest('Invalid vote type')
+  }
+
   const currentAnswerCount = votes.get(answer) || 0
 
   votes.set(answer, currentAnswerCount + 1)
 
   await question.save()
 
-  switch (questionType) {
-    case QUESTION_TYPES.trivia:
-      return {
-        votes,
-        isCorrect: questionType === QUESTION_TYPES.trivia
-          && questionCorrectAnswer === answer,
-      }
-    case QUESTION_TYPES.trivia:
-      return { votes }
-    default:
-      return {}
-  }
+  const handler = handlers[type];
+
+  return handler({ votes, answer, correctAnswer, type });
 }
 
 module.exports = vote

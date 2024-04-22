@@ -4,7 +4,8 @@ const STATUS_CODES = require('../constants/statusCodes')
 // Helpers
 const { HTTPError } = require('../helpers/httpErrors')
 
-function errorHandler(err, _, res) {
+function errorHandler(err, _, res, _) {
+  console.log(err);
   if (err instanceof HTTPError) {
     return res.status(err.statusCode)
       .json({ message: err.message, errors: err?.data })

@@ -1,7 +1,5 @@
 // Modules
 const { Router } = require('express')
-const { checkSchema } = require('express-validator')
-const router = Router()
 
 // Controllers
 const create = require('../../controllers/question/create')
@@ -13,10 +11,15 @@ const validationCreateSchema = require('../../controllers/question/create/schema
 const validationGetByIdSchema = require('../../controllers/question/getById/schema')
 const validationVoteSchema = require('../../controllers/question/vote/schema')
 
-router.post('/', checkSchema(validationCreateSchema), create)
+// Middlewares
+const validate = require('../../middlewares/validate')
 
-router.get('/:id', checkSchema(validationGetByIdSchema), getById)
+const router = Router()
 
-router.post('/:id/vote', checkSchema(validationVoteSchema), vote)
+router.post('/', validate(validationCreateSchema), create)
+
+router.get('/:id', validate(validationGetByIdSchema), getById)
+
+router.post('/:id/vote', validate(validationVoteSchema), vote)
 
 module.exports = router

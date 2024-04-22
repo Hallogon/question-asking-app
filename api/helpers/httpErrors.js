@@ -1,3 +1,6 @@
+// Constants
+const STATUS_CODES = require('../constants/statusCodes')
+
 class HTTPError extends Error {
   constructor(statusCode, message, data = undefined) {
     super(message)

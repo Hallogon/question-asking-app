@@ -23,7 +23,7 @@ app.use(bodyParser.json())
 // Connect routes
 app.use('/api/questions', questionRoutes)
 
-// * Error Handler
+// Error Handler
 app.use(errorHandler)
 
 const start = async () => {

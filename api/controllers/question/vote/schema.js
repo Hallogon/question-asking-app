@@ -1,6 +1,6 @@
 const schema = {
   id: {
-    in: ['query'],
+    in: ['params'],
     exists: true,
   },
   answer: {

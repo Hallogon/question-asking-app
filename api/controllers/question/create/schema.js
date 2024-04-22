@@ -6,6 +6,7 @@ const schema = {
     in: ['body'],
     trim: true,
     notEmpty: true,
+    isString: true,
     errorMessage: 'Text field error',
   },
   type: {
@@ -19,9 +20,17 @@ const schema = {
   },
   answers: {
     in: ['body'],
-    notEmpty: true,
     isArray: {
       options: { min: 1 },
+    },
+    custom: {
+      options: (answers) => {
+        if (answers.some((answer) => typeof answer !== 'string')) {
+          throw new Error('Answers must be strings')
+        }
+
+        return true;
+      },
     },
     errorMessage: 'Answers field error',
   },
